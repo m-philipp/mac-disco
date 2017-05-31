@@ -1,5 +1,11 @@
 # coding: utf8
 
+# TODO:
+# - do something with multiple names for one mac
+# - parse the result in the view
+# - ceantralize table creation and init as text/int fields
+# - deduplicate the ip2mac code
+
 from flask import Flask, redirect, url_for, request, jsonify, abort
 import sqlite3
 import nmap
@@ -43,6 +49,7 @@ def store(name, ip):
 	conn = sqlite3.connect("macStore.db")
 	c = conn.cursor()
 	c.execute("CREATE TABLE IF NOT EXISTS name2macs (name, mac)")
+	
 	c.execute("INSERT INTO name2macs (name, mac) VALUES ('"+name+"','"+ip2mac[ip]+"')")
 	conn.commit()
 	conn.close()
