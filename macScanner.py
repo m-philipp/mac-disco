@@ -35,7 +35,7 @@ c = conn.cursor()
 c.execute("CREATE TABLE IF NOT EXISTS seenMacs (timestamp, mac)")
 
 for mac in onlineMacs:
-	c.execute("INSERT INTO seenMacs VALUES ("+str(time.time())+",'"+mac+"')")
+	c.execute("INSERT INTO seenMacs (timestamp, mac) VALUES ("+str(time.time())+",'"+mac+"')")
 
 conn.commit()
 conn.close()

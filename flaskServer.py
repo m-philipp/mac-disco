@@ -1,4 +1,6 @@
-from flask import Flask, redirect, url_for, request, jsonify
+# coding: utf8
+
+from flask import Flask, redirect, url_for, request, jsonify, abort
 import sqlite3
 import nmap
 
@@ -12,14 +14,10 @@ def index():
 @app.route('/saveName')
 def saveName():
 	remoteIp = request.remote_addr;
-    name = request.args.get('userName')
+	name = request.args.get('userName')
 	if not remoteIp.startswith("192.168"):
-		return jsonify(status = "failure", message = "Es werden nur Nutzer im Rockzipfel aufgenommen")
-	
+		abort(400)
 	store(name, remoteIp)
-	
-	return jsonify(status = "success", message = "Vielen Dank für die Teilnahme")
-
 
 
 def store(name, ip):
@@ -30,14 +28,10 @@ def store(name, ip):
 	conn = sqlite3.connect("macStore.db")
 	c = conn.cursor()
 	c.execute("CREATE TABLE IF NOT EXISTS name2macs (name, mac)")
-
-	print "STORE: " + name + " " + ip2mac[ip]
-	
-	for mac in onlineMacs:
-		c.execute("INSERT INTO user2macs VALUES ("+name+",'"+ip2mac[ip]+"')")
-
+	c.execute("INSERT INTO name2macs (name, mac) VALUES ('"+name+"','"+ip2mac[ip]+"')")
 	conn.commit()
 	conn.close()
+
 
 def getIp2Mac():
 	ip2mac = {}
