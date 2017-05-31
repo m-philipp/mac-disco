@@ -3,7 +3,7 @@
 from flask import Flask, redirect, url_for, request, jsonify, abort
 import sqlite3
 import nmap
-
+import time
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ def index():
 @app.route('/getActiveNames')
 def getActiveNames():
 	timestamp = time.time() - 30*60 # 30 Minutes ago
-	query = 'SELECT name2macs.name, MAX(seenMacs.timestamp) as timestamp FROM seenMacs INNER JOIN name2macs on seenMacs.mac = name2macs.mac WHERE timestamp>'+timestamp+' GROUP BY name2macs.name ORDER BY seenMacs.timestamp DESC'
+	query = 'SELECT name2macs.name, MAX(seenMacs.timestamp) as timestamp FROM seenMacs INNER JOIN name2macs on seenMacs.mac = name2macs.mac WHERE timestamp>'+str(timestamp)+' GROUP BY name2macs.name ORDER BY seenMacs.timestamp DESC'
 	# results in:
 	# hans | 1496271433
 	# peter | 1496201475
@@ -33,7 +33,7 @@ def saveName():
 	if not remoteIp.startswith("192.168"):
 		abort(400)
 	store(name, remoteIp)
-
+	return ''
 
 def store(name, ip):
 	ip2mac = getIp2Mac()
