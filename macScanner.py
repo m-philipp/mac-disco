@@ -5,7 +5,7 @@ import time
 
 # use nmap to scan for ICMP host scan
 nm = nmap.PortScanner()
-nm.scan(hosts='192.168.0.0/24', arguments='-sn')
+nm.scan(hosts='192.168.0.0/24', arguments='-sn') # RZ 192.168.178.0/24
 hosts = nm.all_hosts()
 
 # sleep a while to make sure the ARP discovery from the nmap call is finished
