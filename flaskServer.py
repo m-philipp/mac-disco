@@ -20,7 +20,27 @@ def index():
 @app.route('/getActiveNames')
 def getActiveNames():
 	timestamp = time.time() - 30*60 # 30 Minutes ago
-	query = 'SELECT name2macs.name, MAX(seenMacs.timestamp) as timestamp FROM seenMacs INNER JOIN name2macs on seenMacs.mac = name2macs.mac WHERE timestamp>'+str(timestamp)+' GROUP BY name2macs.name ORDER BY seenMacs.timestamp DESC'
+	query = '''
+		SELECT 
+			newestName2Mac.name,
+			MAX(seenMacs.timestamp) as timestamp 
+		FROM seenMacs 
+		INNER JOIN 
+			(
+				select mac,
+				(
+					select name
+					from name2macs as t2
+					where t.mac = t2.mac
+					order by rowid desc limit 1
+				) as name
+				from name2macs as t
+				group by mac
+			) as newestName2Mac 
+		on seenMacs.mac = newestName2Mac.mac
+		WHERE timestamp>'''+str(timestamp)+'''
+		GROUP BY newestName2Mac.name
+		'''
 	# results in:
 	# hans | 1496271433
 	# peter | 1496201475
