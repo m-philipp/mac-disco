@@ -1,7 +1,9 @@
+# coding: utf8
 import sqlite3
 import nmap
 import time
 
+import storage
 
 # use nmap to scan for ICMP host scan
 nm = nmap.PortScanner()
@@ -29,13 +31,4 @@ for host in hosts:
 		onlineMacs.append(ip2mac[host])
 print onlineMacs
 
-# store the online mac adresses in the sqlite table
-conn = sqlite3.connect("macStore.db")
-c = conn.cursor()
-c.execute("CREATE TABLE IF NOT EXISTS seenMacs (timestamp, mac)")
-
-for mac in onlineMacs:
-	c.execute("INSERT INTO seenMacs (timestamp, mac) VALUES ("+str(time.time())+",'"+mac+"')")
-
-conn.commit()
-conn.close()
+storage.saveOnlineMacAdresses(onlineMacs)

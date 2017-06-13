@@ -19,38 +19,8 @@ def index():
 
 @app.route('/getActiveNames')
 def getActiveNames():
-	timestamp = time.time() - 30*60 # 30 Minutes ago
-	query = '''
-		SELECT 
-			newestName2Mac.name,
-			MAX(seenMacs.timestamp) as timestamp 
-		FROM seenMacs 
-		INNER JOIN 
-			(
-				select mac,
-				(
-					select name
-					from name2macs as t2
-					where t.mac = t2.mac
-					order by rowid desc limit 1
-				) as name
-				from name2macs as t
-				group by mac
-			) as newestName2Mac 
-		on seenMacs.mac = newestName2Mac.mac
-		WHERE timestamp>'''+str(timestamp)+'''
-		GROUP BY newestName2Mac.name
-		'''
-	# results in:
-	# hans | 1496271433
-	# peter | 1496201475
-	
-	conn = sqlite3.connect("macStore.db")
-	c = conn.cursor()
-	c.execute(query)
-	rows = c.fetchall()
-	conn.close()
-	return jsonify(rows)
+	activeUsers = storage.getActiveUsers(30*60)
+	return jsonify(activeUsers)
 
 @app.route('/saveName')
 def saveName():
@@ -66,13 +36,7 @@ def store(name, ip):
 	if not ip in ip2mac:
 		return
 	
-	conn = sqlite3.connect("macStore.db")
-	c = conn.cursor()
-	c.execute("CREATE TABLE IF NOT EXISTS name2macs (name, mac)")
-	
-	c.execute("INSERT INTO name2macs (name, mac) VALUES ('"+name+"','"+ip2mac[ip]+"')")
-	conn.commit()
-	conn.close()
+	storage.saveUsername(name, ip2mac[ip])
 
 
 def getIp2Mac():
