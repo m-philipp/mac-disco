@@ -2,8 +2,8 @@
 import sqlite3
 
 sqliteDB = "macStore.db"
-createSeenMacsTable = "CREATE TABLE IF NOT EXISTS seenMacs (timestamp, mac)"
-createName2macsTable = "CREATE TABLE IF NOT EXISTS name2macs (name, mac)"
+createSeenMacsTable = "CREATE TABLE IF NOT EXISTS seenMacs (timestamp INTEGER, mac TEXT)"
+createName2macsTable = "CREATE TABLE IF NOT EXISTS name2macs (name TEXT, mac TEXT)"
 
 # store the online mac adresses in the sqlite table
 def saveOnlineMacAdresses(adresses):
@@ -30,6 +30,8 @@ def saveUsername(name, mac):
 
 def getActiveUsers(secondsAgo):
 	timestamp = time.time() - secondsAgo 
+	# this gets the users online after the timestamp
+	# with username and the last seen time
 	query = '''
 		SELECT 
 			newestName2Mac.name,
@@ -52,7 +54,8 @@ def getActiveUsers(secondsAgo):
 		GROUP BY newestName2Mac.name
 		'''
 	# results in:
-	# hans | 1496271433
+	# hans | 1496271433		# laptop mac
+	# hans | 1496271437		# mobile mac
 	# peter | 1496201475
 	
 	conn = sqlite3.connect(sqliteDB)
@@ -60,4 +63,5 @@ def getActiveUsers(secondsAgo):
 	c.execute(query)
 	rows = c.fetchall()
 	conn.close()
+	print(rows)
 	return rows
