@@ -136,6 +136,8 @@
 		}
 		
 		
+		moment.locale("de");
+		
 		function getPresentUsers(){
 			$.ajax({
 				url: "../getActiveNames",
@@ -144,11 +146,12 @@
 				
 					for(var prop in result) { 
 						if(result.hasOwnProperty(prop)){
-							var mins = ((Date.now()/1000) - Number(result[prop]))/60;
+							var seen = moment(result[prop]*1000).fromNow();
+							
 							html += "<li>";
 							html += prop;
 							html += " ";
-							html += "<i style='color:#aaa;'>vor " + mins + "</i>";
+							html += "<i style='color:#aaa;'>" + seen + "</i>";
 							html += "</li>";
 						}
 					}
