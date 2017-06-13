@@ -80,7 +80,7 @@
         <div class="col-md-6">
           <h2>Monitor</h2>
           <p>Zurzeit sind im Rockzipfel:</p>
-          <ul>
+          <ul id="presentUser">
 			<li>Martin</li>
 			<li>Peter</li>
 		</ul>
@@ -130,10 +130,23 @@
 				url: "../saveName",
 				data: {'userName' : userName},
 				success: function(result){
-					$("#participateCol").html("Danke fürs mitmachen.");
+					$("#participateCol").html("<h2>Mitmachen:</h2><p>Danke fürs mitmachen.</p>");
 				}
 			});
 		}
+		
+		
+		function getPresentUsers(){
+			$.ajax({
+				url: "../getActiveNames",,
+				success: function(result){
+					$("#presentUser").html(result);
+				}
+			});
+		
+			setTimeout(getPresentUsers, 500);
+		}
+		setTimeout(getPresentUsers, 500);
 	</script>
   </body>
 </html>
