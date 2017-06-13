@@ -81,8 +81,7 @@
           <h2>Monitor</h2>
           <p>Zurzeit sind im Rockzipfel:</p>
           <ul id="presentUser">
-			<li>Martin</li>
-			<li>Peter</li>
+			<li style="color:grey;">loading ...</li>
 		</ul>
         </div>
         <div class="col-md-6" id="participateCol">
@@ -138,7 +137,7 @@
 		
 		function getPresentUsers(){
 			$.ajax({
-				url: "../getActiveNames",,
+				url: "../getActiveNames",
 				success: function(result){
 					var html = "";
 				
@@ -152,14 +151,15 @@
 							html += "</li>";
 						}
 					}
-				
+					if(html == "")
+						html = "Zur Zeit ist niemand da";		
 					$("#presentUser").html(html);
 				}
 			});
-		
 			setTimeout(getPresentUsers, 500);
+		
 		}
-		setTimeout(getPresentUsers, 500);
+		getPresentUsers();
 	</script>
   </body>
 </html>
