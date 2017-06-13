@@ -1,5 +1,6 @@
 # coding: utf8
 import sqlite3
+import time
 
 sqliteDB = "macStore.db"
 createSeenMacsTable = "CREATE TABLE IF NOT EXISTS seenMacs (timestamp INTEGER, mac TEXT)"
@@ -11,7 +12,7 @@ def saveOnlineMacAdresses(adresses):
 	c = conn.cursor()
 	c.execute(createSeenMacsTable)
 
-	for mac in onlineMacs:
+	for mac in adresses:
 		c.execute("INSERT INTO seenMacs (timestamp, mac) VALUES ("+str(time.time())+",'"+mac+"')")
 
 	conn.commit()

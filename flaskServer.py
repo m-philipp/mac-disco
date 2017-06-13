@@ -10,6 +10,7 @@ from flask import Flask, redirect, url_for, request, jsonify, abort
 import sqlite3
 import nmap
 import time
+import storage
 
 app = Flask(__name__)
 
